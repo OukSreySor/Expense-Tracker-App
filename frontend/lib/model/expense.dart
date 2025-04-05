@@ -1,12 +1,12 @@
 class Expense {
-  final int id;
+  final int? id;
   final double amount;
   final String category;
   final DateTime date;
   final String? notes;
 
   Expense({
-    required this.id,
+    this.id,
     required this.amount,
     required this.category,
     required this.date,

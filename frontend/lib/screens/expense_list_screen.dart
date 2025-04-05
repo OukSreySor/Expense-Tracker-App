@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/model/expense.dart';
+import 'package:frontend/screens/add_expense_screen.dart';
 import 'package:frontend/theme/theme.dart';
 import 'package:frontend/utils/date_time_util.dart';
 
@@ -48,7 +49,10 @@ class ExpenseListScreen extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    // Navigate to AddExpenseScreen 
+                    Navigator.push(
+                      context, 
+                      MaterialPageRoute(builder: (context) => AddExpenseScreen())
+                    );
                   },
                   icon: Icon(Icons.add, color: Colors.white),
                   label: Text('Add new expense', style: TextStyle(color: Colors.white),),

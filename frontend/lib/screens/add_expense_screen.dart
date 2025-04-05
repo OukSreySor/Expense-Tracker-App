@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/model/expense.dart';
+import 'package:frontend/service/expense_service.dart';
 import 'package:frontend/theme/theme.dart';
 import 'package:frontend/utils/date_time_util.dart';
 import 'package:frontend/widgets/actions/ept_button.dart';
@@ -44,6 +46,37 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       });
     }
   }
+
+  void _addExpense() async {
+    if (_amountController.text.isEmpty || _selectedCategory == null || _dateController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Please fill in all fields")),
+      );
+      return;
+    }
+
+    Expense expense = Expense(
+      amount: double.parse(_amountController.text),
+      category: _selectedCategory!,
+      date: _selectedDate!,
+      notes: _noteController.text,
+    );
+
+    // Call the ExpenseService to add the expense
+    ExpenseService expenseService = ExpenseService();
+    String result = await expenseService.addExpense(expense);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(result)),
+    );
+
+    // If successfully added, navigate back to the previous screen
+    if (result.contains('successfully')) {
+      Navigator.pop(context);
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +152,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               width: double.infinity,
               child: EptButton(
                 text: 'ADD', 
-                onPressed: (){}
+                onPressed: _addExpense
               ),
             ),
           ],

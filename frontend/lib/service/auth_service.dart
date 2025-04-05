@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:frontend/utils/auth_util.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
@@ -39,6 +40,7 @@ class AuthService {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       String token = data['token'];
+      await storeToken(token);
       return token; 
     } else {
       final error = json.decode(response.body); 
