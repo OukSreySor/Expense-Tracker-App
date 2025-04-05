@@ -4,16 +4,15 @@ import 'package:frontend/widgets/actions/ept_button.dart';
 import 'package:frontend/widgets/actions/ept_text_button.dart';
 import 'package:frontend/widgets/inputs/ept_textfield.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
-
+class SignupScreen extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _SignupScreenState createState() => _SignupScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignupScreenState extends State<SignupScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -22,46 +21,51 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
           padding: EdgeInsets.all(EPTSpacings.xl),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start, 
             children: [
-              Center(
-                child: Image.asset(
-                  'assets/images/ep-2.png', 
-                  height: 200,
-                  fit: BoxFit.contain,
-                ),
+              Text(
+                'Welcome!',
+                style: EPTTextStyles.heading,
               ),
-              SizedBox(height: EPTSpacings.xxl),
+              SizedBox(height: EPTSpacings.xs),
+              Text(
+                'Create an account to join Moneta :)',
+                style: EPTTextStyles.body
+              ),
+              SizedBox(height: EPTSpacings.xxxl),
               Text('Email'),
               SizedBox(height: EPTSpacings.xs),
-
               EptTextField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
               ),
-              SizedBox(height: EPTSpacings.l),
+              SizedBox(height: EPTSpacings.m),
               Text('Password'),
-
               SizedBox(height: EPTSpacings.xs),
               EptTextField(
                 controller: _passwordController,
+              ),
+              SizedBox(height: EPTSpacings.m),
+              Text('Confirm Password'),
+              SizedBox(height: EPTSpacings.xs),
+              EptTextField(
+                controller: _confirmPasswordController,
                 obscureText: true,
               ),
-              
               SizedBox(height: EPTSpacings.xxxl),
               Center(
                 child: EptButton(
-                  text: 'LOG IN', 
+                  text: 'CREATE', 
                   onPressed: (){}
-                )
+                ),
               ),
               SizedBox(height: EPTSpacings.m),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Don't have an account? "),
+                  Text("Already have an account? "),
                   EptTextButton(
-                    text: 'SIGN UP', 
+                    text: 'LOG IN', 
                     onPressed: (){}
                   )
                 ],

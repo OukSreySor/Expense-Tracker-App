@@ -69,7 +69,8 @@ class EPTSpacings {
   static const double m = 16; 
   static const double l = 24; 
   static const double xl = 32; 
-  static const double xxl = 50; 
+  static const double xxl = 48; 
+  static const double xxxl = 72;
 
   static const double radius = 16; 
   static const double radiusLarge = 24; 
