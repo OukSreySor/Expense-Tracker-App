@@ -5,7 +5,7 @@ import 'package:frontend/widgets/actions/ept_button.dart';
 
 class AddExpenseScreen extends StatefulWidget {
   const AddExpenseScreen({super.key});
-
+  
   @override
   _AddExpenseScreenState createState() => _AddExpenseScreenState();
 }
@@ -55,7 +55,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
           children: [
             Text(
               'Add a new Expense',
-              style: EPTTextStyles.heading,
+              style: EPTTextStyles.title.copyWith(color: EPTColors.primary),
             ),
             SizedBox(height: EPTSpacings.xs),
             Text(

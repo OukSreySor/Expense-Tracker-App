@@ -16,7 +16,7 @@ class DateTimeUtils {
     } else if (targetDate == today.add(Duration(days: 1))) {
       return 'Tomorrow';
     } else {
-      return DateFormat('E d MMM').format(dateTime); // Example: Wed 12 Feb
+      return DateFormat('E d MMMM').format(dateTime); // Example: Wed 12 Feb
     }
   }
 

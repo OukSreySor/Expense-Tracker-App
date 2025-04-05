@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/add_expense_screen.dart';
+import 'package:frontend/screens/expense_list_screen.dart';
+import 'package:frontend/screens/signup_screen.dart';
 import 'package:frontend/theme/theme.dart';
 
 void main() {
@@ -14,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: appTheme,
-      home: AddExpenseScreen(),
+      home: ExpenseListScreen(),
     );
   }
 }

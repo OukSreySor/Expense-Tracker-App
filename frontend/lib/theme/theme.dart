@@ -14,7 +14,12 @@ class EPTColors {
   static Color neutralLighter     = const Color(0xFF92A7AB);
 
   static Color greyLight          = const Color(0xFFE2E2E2);
-  
+
+  static Color amount             = const Color(0xFF19A508);
+  static Color addEpt             = const Color(0xFF83DBEE);
+
+  static Color edit               = Colors.orange;
+  static Color delete             =  Colors.red;
   static Color white              = Colors.white;
   static Color black              = Colors.black;
 
@@ -51,7 +56,7 @@ class EPTTextStyles {
 
   static TextStyle title =  TextStyle(fontSize: 20, fontWeight: FontWeight.w400);
 
-  static TextStyle body =  TextStyle(fontSize: 15, fontWeight: FontWeight.w400);
+  static TextStyle body =  TextStyle(fontSize: 16, fontWeight: FontWeight.w400);
 
   static TextStyle label =  TextStyle(fontSize: 12, fontWeight: FontWeight.w400);
 

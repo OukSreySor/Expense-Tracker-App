@@ -25,7 +25,7 @@ class _SignupScreenState extends State<SignupScreen> {
             children: [
               Text(
                 'Welcome!',
-                style: EPTTextStyles.heading,
+                style: EPTTextStyles.title.copyWith(color: EPTColors.primary),
               ),
               SizedBox(height: EPTSpacings.xs),
               Text(
