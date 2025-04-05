@@ -12,11 +12,11 @@ class ExpenseDto {
   }
   static Expense fromJson(Map<String, dynamic> json) {
     return Expense(
-      id: json['id'],
-      amount: json['amount'], 
-      category: json['category'],
-      date: DateTime.parse(json['date']),
-      notes: json['notes'],
+      id: json['ID'],
+      amount: json['AMOUNT'], 
+      category: json['CATEGORY'],
+      date: DateTime.parse(json['DATE']),
+      notes: json['NOTES'],
     );
   }
 }

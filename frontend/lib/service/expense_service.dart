@@ -32,4 +32,32 @@ class ExpenseService {
     }
   }
 
+  Future<List<Expense>> getExpenses() async {
+
+    try {
+      String token = await getToken();  
+    
+      if (token.isEmpty) {
+        throw Exception('No token found. Please log in.');
+      }
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/expense-list'),
+         headers: {
+          'Authorization': 'Bearer $token',  
+        },
+        
+      );
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        return data.map((expenseData) => ExpenseDto.fromJson(expenseData)).toList();
+      } else {
+        throw Exception('Failed to load expenses');
+      }
+    } catch (e) {
+      throw Exception('Error fetching expenses: $e');
+    }
+  }
+
 }
