@@ -72,7 +72,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
     // If successfully added, navigate back to the previous screen
     if (result.contains('successfully')) {
-      Navigator.pop(context);
+      Navigator.pop(context, expense);
     }
   }
 
