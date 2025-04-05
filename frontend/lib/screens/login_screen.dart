@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/expense_list_screen.dart';
+import 'package:frontend/screens/signup_screen.dart';
+import 'package:frontend/service/auth_service.dart';
 import 'package:frontend/theme/theme.dart';
 import 'package:frontend/widgets/actions/ept_button.dart';
 import 'package:frontend/widgets/actions/ept_text_button.dart';
@@ -12,8 +15,31 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  String? _errorMessage;
+
+  void _loginUser() async {
+
+    final email = _emailController.text;
+    final password = _passwordController.text;
+
+    String response = await AuthService().loginUser(email, password);
+
+    if (response.contains("Error logging in")) {
+      setState(() {
+        _errorMessage = response;
+      });
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => ExpenseListScreen()),
+      );
+    }
+  }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +78,22 @@ class _LoginScreenState extends State<LoginScreen> {
               Center(
                 child: EptButton(
                   text: 'LOG IN', 
-                  onPressed: (){}
+                  onPressed: _loginUser,
                 )
               ),
+              if (_errorMessage != null)
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Text(
+                      _errorMessage ?? '',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
               SizedBox(height: EPTSpacings.m),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -62,7 +101,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   Text("Don't have an account? "),
                   EptTextButton(
                     text: 'SIGN UP', 
-                    onPressed: (){}
+                    onPressed: (){
+                      Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignupScreen()));
+                    }
                   )
                 ],
               ),

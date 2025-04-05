@@ -37,11 +37,12 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   void showSnackbar(BuildContext context, String message) {
+    Color snackbarColor = message.contains("Error") ? Colors.red : Colors.green;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
         duration: Duration(seconds: 2),
-        backgroundColor: Colors.green,
+        backgroundColor: snackbarColor,
       ),
     );
   }

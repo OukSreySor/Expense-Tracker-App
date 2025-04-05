@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/login_screen.dart';
+import 'package:frontend/screens/signup_screen.dart';
 import 'package:frontend/theme/theme.dart';
 import 'package:frontend/widgets/actions/ept_button.dart';
 import 'package:frontend/widgets/actions/ept_text_button.dart';
@@ -40,13 +42,21 @@ class HomeScreen extends StatelessWidget {
               SizedBox(height: EPTSpacings.xxl),
               EptButton(
                   text: 'CREATE ACCOUNT', 
-                  onPressed: () {}
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignupScreen()));
+                  }
                 ),
               
               SizedBox(height: 16.0),
               EptTextButton(
                 text: 'LOG IN', 
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()));
+                },
               )
             ],
           ),

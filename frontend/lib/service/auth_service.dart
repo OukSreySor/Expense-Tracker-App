@@ -20,7 +20,29 @@ class AuthService {
     if (response.statusCode == 201) {
       return "User registered successfully!";
     } else {
-      return "Error registering user: ${response.body}";
+      final error = json.decode(response.body); 
+      return "Error registering user: ${error['message']}";
+    }
+  }
+
+  // User login
+  Future<String> loginUser(String email, String password) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/login'),
+      headers: {"Content-Type": "application/json"},
+      body: json.encode({
+        'email': email,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      String token = data['token'];
+      return token; 
+    } else {
+      final error = json.decode(response.body); 
+      return "Error logging in: ${error['message']}";
     }
   }
 
