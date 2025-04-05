@@ -27,13 +27,13 @@ class HomeScreen extends StatelessWidget {
               ),
               SizedBox(height: EPTSpacings.xxl),
               Text(
-                'See where your money goes and start saving smarter.',
+                'See where your money goes and start saving smarter',
                 textAlign: TextAlign.center,
                 style: EPTTextStyles.body
               ),
               SizedBox(height: 4),
               Text(
-                'Sign up or log in to track your finances.',
+                'Sign up or log in to track your finances',
                 textAlign: TextAlign.center,
                 style: EPTTextStyles.body
               ),
