@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/theme/theme.dart';
 
-
 class EptTextField extends StatefulWidget {
   const EptTextField({
     super.key,
@@ -9,7 +8,7 @@ class EptTextField extends StatefulWidget {
     this.obscureText = false,
     this.keyboardType = TextInputType.text,
     this.validator,
-    this.onTap, // handle tap events for DatePicker
+    this.onTap, 
     this.suffixIcon, 
   });
 
@@ -17,7 +16,7 @@ class EptTextField extends StatefulWidget {
   final bool obscureText;
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
-  final VoidCallback? onTap; // Callback for when the field is tapped (e.g., date picker)
+  final VoidCallback? onTap; 
   final Widget? suffixIcon; 
 
   @override
@@ -30,7 +29,7 @@ class _EptTextFieldState extends State<EptTextField> {
   @override
   void initState() {
     super.initState();
-    _secureText = widget.obscureText; // Initialize with provided obscureText value
+    _secureText = widget.obscureText; 
   }
 
   @override
@@ -46,12 +45,12 @@ class _EptTextFieldState extends State<EptTextField> {
           fillColor: EPTColors.greyLight,
           filled: true,
           suffixIcon: widget.suffixIcon ??
-              (widget.obscureText // Only show the toggle if it's a password field
+              (widget.obscureText 
               ? IconButton(
                   icon: Icon(_secureText ? Icons.visibility_off : Icons.visibility),
                   onPressed: () {
                     setState(() {
-                      _secureText = !_secureText; // Toggle visibility
+                      _secureText = !_secureText; 
                     });
                   },
                 )

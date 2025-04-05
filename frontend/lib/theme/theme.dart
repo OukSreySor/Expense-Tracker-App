@@ -16,6 +16,7 @@ class EPTColors {
   static Color greyLight          = const Color(0xFFE2E2E2);
   
   static Color white              = Colors.white;
+  static Color black              = Colors.black;
 
   static Color get backGroundColor { 
     return EPTColors.primary;
