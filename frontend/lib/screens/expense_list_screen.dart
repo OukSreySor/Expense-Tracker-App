@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/model/expense.dart';
 import 'package:frontend/screens/add_expense_screen.dart';
+import 'package:frontend/screens/login_screen.dart';
 import 'package:frontend/screens/monthly_spend_screen.dart';
 import 'package:frontend/service/expense_service.dart';
 import 'package:frontend/theme/theme.dart';
 import 'package:frontend/utils/date_time_util.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ExpenseListScreen extends StatefulWidget {
   ExpenseListScreen({super.key});
@@ -15,7 +17,7 @@ class ExpenseListScreen extends StatefulWidget {
 
 class _ExpenseListScreenState extends State<ExpenseListScreen> {
 
-  late List<Expense> _expenses;
+  late List<Expense> _expenses = [];
 
   final Map<String, String> categoryImages = {
     'Food': 'images/categories/food.png',
@@ -41,6 +43,16 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
     setState(() {
       _expenses = expenseList;  
     });
+  }
+
+  Future<void> logout(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+    
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginScreen()), 
+    );
   }
 
   @override
@@ -78,38 +90,37 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
                     ),
                   ),           
               ),
+              SizedBox(height: EPTSpacings.s),
+              Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    logout(context);  
+                  },
+                  icon: Icon(Icons.logout, color: Colors.white),
+                  label: Text('Logout', style: TextStyle(color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    padding: EdgeInsets.symmetric(horizontal: EPTSpacings.m, vertical: EPTSpacings.m),
+                  ),
+                ),
+              ),
               SizedBox(height: EPTSpacings.l),
               Text('Your expenses', style: EPTTextStyles.body),
               SizedBox(height: EPTSpacings.m),
-
-              Expanded(
-                child: FutureBuilder<List<Expense>>(
-                  future: ExpenseService().getExpenses(), 
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-
-                    if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    }
-
-                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Center(child: Text('No expenses yet.'));
-                    }
-
-                    final expenses = snapshot.data!;
-                    return ListView.builder(
-                      itemCount: expenses.length,
+              _expenses.isEmpty
+                  ? Center(child: Text('No expenses yet.'))
+                  : Expanded(
+                    child: ListView.builder(
+                      itemCount: _expenses.length,
                       itemBuilder: (context, index) {
-                        final expense = expenses[index];
+                        final expense = _expenses[index];
                         final category = expense.category;
                         final imagePath = categoryImages[category] ?? 'images/categories/default.png';
 
                         // Extract the month from the expense date
                         final String month = '${expense.date.year}-${expense.date.month.toString().padLeft(2, '0')}';
                       
-
                         return GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -158,14 +169,12 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
                         )
                         );
                   }
-                );
-                  }
-                )
-          ),
-            ],
-      ),
-    )
-    )
+                ),
+                  )
+              ]
+            )
+          )
+        )
     );
 }
 }

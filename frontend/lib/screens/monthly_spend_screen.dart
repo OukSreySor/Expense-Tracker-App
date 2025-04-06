@@ -108,7 +108,7 @@ class _MonthlySpendingGridScreenState extends State<MonthlySpendingGridScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(weekday, style: TextStyle(color: EPTColors.primary)),
-                                    SizedBox(height: EPTSpacings.s),
+                                    SizedBox(height: EPTSpacings.m),
                                     Text(day),
                                     SizedBox(height: EPTSpacings.xs),
                                     Text(
