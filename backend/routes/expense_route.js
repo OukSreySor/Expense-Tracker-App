@@ -31,4 +31,42 @@ router.get("/expense-list", authMiddleware, async (request, respond) => {
   }
 });
 
+router.get("/daily-summary", authMiddleware, async (request, respond) => {
+  const { month } = request.query; 
+  
+  if (!month || !/^\d{4}-\d{2}$/.test(month)) {
+    return respond.status(400).json({ message: "Invalid or missing month. Use format YYYY-MM." });
+  }
+
+  const startDate = `${month}-01`;
+  const endDate = `${month}-31`; 
+
+  try {
+    const query = `
+      SELECT DATE(DATE) as day, SUM(AMOUNT) as total
+      FROM EXPENSE
+      WHERE USER_ID = ?
+        AND DATE >= ?
+        AND DATE <= ?
+      GROUP BY DATE(DATE)
+      ORDER BY DATE(DATE)
+    `;
+    
+    const rows = await db.all(query, [request.userId, startDate, endDate]);
+
+    // Convert to object like { "2025-04-01": 25.0 }
+    const dailySpending = {};
+    for (const row of rows) {
+      dailySpending[row.day] = row.total;
+    }
+
+    respond.json(dailySpending);
+
+  } catch (error) {
+    console.error(error);
+    respond.status(500).json({ message: "Error fetching daily summary.", error });
+  }
+});
+
+
 export default router;

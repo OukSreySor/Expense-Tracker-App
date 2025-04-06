@@ -60,4 +60,35 @@ class ExpenseService {
     }
   }
 
+  Future<Map<String, double>> getDailySpending(String month) async {
+    try {
+      String token = await getToken();
+    
+      if (token.isEmpty) {
+        throw Exception('No token found. Please log in.');
+      }
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/daily-summary?month=$month'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> data = json.decode(response.body);
+        // Convert the response data to a map of date -> spending
+        Map<String, double> dailySpending = {};
+        data.forEach((key, value) {
+          dailySpending[key] = value.toDouble();
+        });
+        return dailySpending;
+      } else {
+        throw Exception('Failed to load daily spending data');
+      }
+    } catch (e) {
+      throw Exception('Error fetching daily spending data: $e');
+    }
+  }
+
 }

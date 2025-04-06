@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/model/expense.dart';
 import 'package:frontend/screens/add_expense_screen.dart';
+import 'package:frontend/screens/monthly_spend_screen.dart';
 import 'package:frontend/service/expense_service.dart';
 import 'package:frontend/theme/theme.dart';
 import 'package:frontend/utils/date_time_util.dart';
@@ -47,37 +48,36 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(EPTSpacings.xl),
+          padding: EdgeInsets.all(EPTSpacings.xl),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Hey there!', style: EPTTextStyles.title.copyWith(color: EPTColors.primary)),
               SizedBox(height: EPTSpacings.xs),
               Text('Hope you’re having a great day  ^ ^', style: EPTTextStyles.body),
-              SizedBox(height: EPTSpacings.m),
+              SizedBox(height: EPTSpacings.l),
               Align(
                 alignment: Alignment.centerRight,
-                child: ElevatedButton.icon(
-                  onPressed: () async {
-                    final newExpense = await Navigator.push(
-                      context, 
-                      MaterialPageRoute(builder: (context) => AddExpenseScreen())
-                    );
-                    if (newExpense != null){
-                      setState(() {
-                        _expenses.add(newExpense);
-                      });
-                    }
-                  },
-                  icon: Icon(Icons.add, color: Colors.white),
-                  label: Text('Add new expense', style: TextStyle(color: Colors.white),),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: EPTColors.addEpt,
-                    padding: EdgeInsets.symmetric(horizontal: EPTSpacings.m, vertical: EPTSpacings.m),
-                  ),
-                ),
+                  child: ElevatedButton.icon(
+                    onPressed: () async {
+                      final newExpense = await Navigator.push(
+                        context, 
+                        MaterialPageRoute(builder: (context) => AddExpenseScreen())
+                      );
+                      if (newExpense != null){
+                        setState(() {
+                          _expenses.add(newExpense);
+                        });
+                      }
+                    },
+                    icon: Icon(Icons.add, color: Colors.white),
+                    label: Text('Add new expense', style: TextStyle(color: Colors.white),),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: EPTColors.addEpt,
+                      padding: EdgeInsets.symmetric(horizontal: EPTSpacings.m, vertical: EPTSpacings.m),
+                    ),
+                  ),           
               ),
-
               SizedBox(height: EPTSpacings.l),
               Text('Your expenses', style: EPTTextStyles.body),
               SizedBox(height: EPTSpacings.m),
@@ -106,7 +106,20 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
                         final category = expense.category;
                         final imagePath = categoryImages[category] ?? 'images/categories/default.png';
 
-                        return Container(
+                        // Extract the month from the expense date
+                        final String month = '${expense.date.year}-${expense.date.month.toString().padLeft(2, '0')}';
+                      
+
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MonthlySpendingGridScreen(month: month),
+                              ),
+                            );
+                          },
+                        child: Container(
                           margin: EdgeInsets.only(bottom: EPTSpacings.s),
                           padding: EdgeInsets.all(EPTSpacings.m),
                           decoration: BoxDecoration(
@@ -142,6 +155,7 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
                               ),
                             ],
                           ),
+                        )
                         );
                   }
                 );
@@ -155,3 +169,4 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
     );
 }
 }
+
