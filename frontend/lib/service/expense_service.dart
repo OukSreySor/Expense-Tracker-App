@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:frontend/data/expense_dto.dart';
 import 'package:frontend/utils/auth_util.dart';
@@ -57,6 +58,56 @@ class ExpenseService {
       }
     } catch (e) {
       throw Exception('Error fetching expenses: $e');
+    }
+  }
+
+  Future<String> updateExpense(int expenseId, Expense expense) async {
+    try {
+      String token = await getToken();
+      if (token.isEmpty) {
+        return 'Error: No token found. Please log in.';
+      }
+
+      final response = await http.put(
+        Uri.parse('$baseUrl/update/$expenseId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode(ExpenseDto.toJson(expense)),
+      );
+
+      if (response.statusCode == 200) {
+        return 'Expense updated successfully!';
+      } else {
+        return 'Error updating expense: ${response.body}';
+      }
+    } catch (e) {
+      return 'Error updating expense: $e';
+    }
+  }
+
+  Future<String> deleteExpense(int expenseId) async {
+    try {
+      String token = await getToken();
+      if (token.isEmpty) {
+        return 'Error: No token found. Please log in.';
+      }
+
+      final response = await http.delete(
+        Uri.parse('$baseUrl/delete/$expenseId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return 'Expense deleted successfully!';
+      } else {
+        return 'Error deleting expense: ${response.body}';
+      }
+    } catch (e) {
+      return 'Error deleting expense: $e';
     }
   }
 

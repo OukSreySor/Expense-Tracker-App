@@ -6,12 +6,13 @@ import 'package:frontend/utils/date_time_util.dart';
 import 'package:frontend/widgets/actions/ept_button.dart';
 
 class AddExpenseScreen extends StatefulWidget {
-  const AddExpenseScreen({super.key});
+  final Expense? expenseToEdit;  
+
+  const AddExpenseScreen({super.key, this.expenseToEdit});
   
   @override
   _AddExpenseScreenState createState() => _AddExpenseScreenState();
 }
-
 class _AddExpenseScreenState extends State<AddExpenseScreen> {
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
@@ -32,6 +33,18 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     {'name': 'Entertainment', 'color': Colors.cyan.shade200},
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    if (widget.expenseToEdit != null) {
+      _amountController.text = widget.expenseToEdit!.amount.toString();
+      _dateController.text = DateTimeUtils.formatDateTime(widget.expenseToEdit!.date);
+      _noteController.text = widget.expenseToEdit!.notes!;
+      _selectedCategory = widget.expenseToEdit!.category; // Ensure category is set
+      _selectedDate = widget.expenseToEdit!.date;
+    }
+  }
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -47,7 +60,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     }
   }
 
-  void _addExpense() async {
+  void _addOrUpdateExpense() async {
     if (_amountController.text.isEmpty || _selectedCategory == null || _dateController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Please fill in all fields")),
@@ -62,21 +75,23 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       notes: _noteController.text,
     );
 
-    // Call the ExpenseService to add the expense
     ExpenseService expenseService = ExpenseService();
-    String result = await expenseService.addExpense(expense);
+    String result;
+
+    if (widget.expenseToEdit == null) {
+      result = await expenseService.addExpense(expense);  
+    } else {
+      result = await expenseService.updateExpense(widget.expenseToEdit!.id!, expense);  
+    }
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(result)),
     );
 
-    // If successfully added, navigate back to the previous screen
     if (result.contains('successfully')) {
       Navigator.pop(context, expense);
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -87,17 +102,19 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Add a new Expense',
+              widget.expenseToEdit == null ? 'Add a new Expense' : 'Edit Expense',  
               style: EPTTextStyles.title.copyWith(color: EPTColors.primary),
             ),
             SizedBox(height: EPTSpacings.xs),
             Text(
-              'It\'s a good habit to keep track of your expenditure',
+              widget.expenseToEdit == null 
+                ? 'It\'s a good habit to keep track of your expenditure' 
+                : 'Make necessary changes and save the expense.',
               style: EPTTextStyles.body,
             ),
             SizedBox(height: EPTSpacings.xl),
             CustomTextField(
-              label: 'Amount', 
+              label: 'Amount',
               controller: _amountController,
               prefixText: '\$',
             ),
@@ -151,8 +168,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             SizedBox(
               width: double.infinity,
               child: EptButton(
-                text: 'ADD', 
-                onPressed: _addExpense
+                text: widget.expenseToEdit == null ? 'ADD' : 'UPDATE',
+                onPressed: _addOrUpdateExpense,
               ),
             ),
           ],
@@ -160,7 +177,6 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       ),
     );
   }
-
 }
 
 class CustomTextField extends StatelessWidget {
@@ -210,3 +226,4 @@ class CustomTextField extends StatelessWidget {
     );
   }
 }
+

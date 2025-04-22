@@ -31,6 +31,58 @@ router.get("/expense-list", authMiddleware, async (request, respond) => {
   }
 });
 
+router.delete('/delete/:expenseId', authMiddleware, async (request, respond) => {
+  const { expenseId } = request.params;
+  if (!expenseId) {
+    return respond.status(400).json({ message: "Expense ID is required." });
+  }
+
+  try {
+    // Check if the expense exists and belongs to the logged-in user
+    const expense = await db.get("SELECT * FROM EXPENSE WHERE USER_ID = ? AND ID = ?", [request.userId, expenseId]);
+
+    if (!expense) {
+      return respond.status(404).json({ message: "Expense not found." });
+    }
+
+    // Delete the expense from the database
+    await db.run("DELETE FROM EXPENSE WHERE USER_ID = ? AND ID = ?", [request.userId, expenseId]);
+
+    respond.status(200).json({ message: "Expense deleted successfully!" });
+  } catch (error) {
+    respond.status(500).json({ message: "Error deleting expense.", error });
+  }
+});
+
+router.put("/update/:expenseId", authMiddleware, async (request, respond) => {
+  const { expenseId } = request.params; // Get the expenseId from URL parameters
+  const { amount, category, date, notes } = request.body; // Get updated details from request body
+
+  if (!amount || !category || !date) {
+    return respond.status(400).json({ message: "Amount, category, and date are required." });
+  }
+
+  try {
+    // Check if the expense exists and belongs to the logged-in user
+    const expense = await db.get("SELECT * FROM EXPENSE WHERE USER_ID = ? AND ID = ?", [request.userId, expenseId]);
+
+    if (!expense) {
+      return respond.status(404).json({ message: "Expense not found." });
+    }
+
+    // Update the expense in the database
+    await db.run(
+      "UPDATE EXPENSE SET AMOUNT = ?, CATEGORY = ?, DATE = ?, NOTES = ? WHERE USER_ID = ? AND ID = ?",
+      [amount, category, date, notes, request.userId, expenseId]
+    );
+
+    respond.status(200).json({ message: "Expense updated successfully!" });
+  } catch (error) {
+    respond.status(500).json({ message: "Error updating expense.", error });
+  }
+});
+
+
 router.get("/daily-summary", authMiddleware, async (request, respond) => {
   const { month } = request.query; 
   
